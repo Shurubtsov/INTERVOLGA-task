@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require_once __DIR__ . "/vendor/autoload.php";
+require_once ('./storage.php'); // require for access to class of storage
 
 $app = AppFactory::create();
 
@@ -37,14 +38,29 @@ $app->get('/create', function (Request $request, Response $response) {
     $response->getBody()->write($dbController->createTable());
     return $response;
 });
-// get table list from controller
+
+// get table list from controller [DON'T WORK****, return null] TODO: fix this
 $app->get('/getTable', function (Request $request, Response $response) {
     $dbController = new Db();
     $tables = $dbController->getTable();
     $response->getBody()->write("$tables its tables");
     return $response;
-            // ->withHeader('content-type', 'application/json')
-            // ->withStatus(200);
+    // ->withHeader('content-type', 'application/json')
+    // ->withStatus(200);
+});
+
+// task #3 -> return one review from ID argument
+$app->get('/api/feedbacks/{id}', function (Request $request, Response $response, array $args) {
+
+    $id = $args['id'];
+    $storage = new Storage();
+    $review = $storage->getReviewByID($id);
+
+    $response->getBody()->write(json_encode($review));
+
+    return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
 });
 
 $app->run();
