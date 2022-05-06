@@ -22,12 +22,19 @@ $app->get('/hello', function (Request $request, Response $response) {
     return $response;
 });
 
-// connecting to db and if file of db does not exist connection create him in config path
+// connecting to db from controller and if file of db does not exist connection create him in config path
 use App\Controller\Db;
 
 $app->get('/connect', function (Request $request, Response $response) {
     $dbController = new Db();
     $response->getBody()->write($dbController->connect());
+    return $response;
+});
+
+// create table from controller
+$app->get('/create', function (Request $request, Response $response) {
+    $dbController = new Db();
+    $response->getBody()->write($dbController->createTable());
     return $response;
 });
 

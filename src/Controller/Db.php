@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Controller;
+
 use App\Db\SQliteConnection;
 use App\Db\SQliteCreateTable;
+use Exception;
 
 class Db
 {
@@ -14,5 +16,18 @@ class Db
         } else {
             return 'Connect to SQLite db denied, something went wrong';
         }
+    }
+
+    public function createTable()
+    {
+        $sqlite = new SQliteCreateTable((new SQliteConnection())->connect());
+        $message = '';
+        try {
+            $sqlite->createTable();
+            $message = 'Database table is created';
+        } catch (Exception $e) {
+            $message = 'ERROR: cant create table: ' . $e->getMessage();
+        }
+        return $message;
     }
 }
