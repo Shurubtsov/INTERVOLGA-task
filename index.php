@@ -1,40 +1,34 @@
 <?php
-    
-    namespace App;
-    
-    use Psr\Http\Message\ResponseInterface as Response;
-    use Psr\Http\Message\ServerRequestInterface as Request;
-    use Slim\Factory\AppFactory;
 
-    require_once __DIR__ . "/vendor/autoload.php";
+namespace App;
 
-    $app = AppFactory::create();
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
 
-    use App\Controller\Hello;
+require_once __DIR__ . "/vendor/autoload.php";
 
-    // requesting to controller which return hello world from slim
-    $app->get('/hello', function (Request $request, Response $response) {
-        
-        // notice controller of Hello class
-        $controller = new Hello();
-        // response return display funcion of Hello with body "helloworld"
-        $response->getBody()->write($controller->display());
-        return $response;
-        
-    });
+$app = AppFactory::create();
 
-    // connecting to db and if file of db does not exist connection create him in config path
-    use App\Db\SQliteConnection;
+use App\Controller\Hello;
 
-    $app->get('/connect', function (Request $request, Response $response) {
-        // notice
-        $pdo = (new SQliteConnection())->connect();
-        if ($pdo != null) {
-            $response->getBody()->write('Connect to SQLite db is successful');
-        } else {
-            $response->getBody()->write('Connect to SQLite db denied, something went wrong');
-        }
-        return $response;
-    });
+// requesting to controller which return hello world from slim
+$app->get('/hello', function (Request $request, Response $response) {
 
-    $app->run();
+    // notice controller of Hello class
+    $helloController = new Hello();
+    // response return display funcion of Hello with body "helloworld"
+    $response->getBody()->write($helloController->display());
+    return $response;
+});
+
+// connecting to db and if file of db does not exist connection create him in config path
+use App\Controller\Db;
+
+$app->get('/connect', function (Request $request, Response $response) {
+    $dbController = new Db();
+    $response->getBody()->write($dbController->connect());
+    return $response;
+});
+
+$app->run();
