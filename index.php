@@ -37,5 +37,14 @@ $app->get('/create', function (Request $request, Response $response) {
     $response->getBody()->write($dbController->createTable());
     return $response;
 });
+// get table list from controller
+$app->get('/getTable', function (Request $request, Response $response) {
+    $dbController = new Db();
+    $tables = $dbController->getTable();
+    $response->getBody()->write("$tables its tables");
+    return $response;
+            // ->withHeader('content-type', 'application/json')
+            // ->withStatus(200);
+});
 
 $app->run();

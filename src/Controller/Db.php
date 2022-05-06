@@ -28,6 +28,15 @@ class Db
         } catch (Exception $e) {
             $message = 'ERROR: cant create table: ' . $e->getMessage();
         }
+
         return $message;
+    }
+
+    public function getTable()
+    {
+        $sqlite = new SQliteCreateTable((new SQliteConnection())->connect());
+        $tables = $sqlite->createTable();
+
+        return $tables;
     }
 }
