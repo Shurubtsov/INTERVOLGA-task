@@ -55,4 +55,10 @@ class SQliteQuery
 
         return $review;
     }
+
+    public function deleteReview($id) {
+        $stmt = $this->pdo->prepare('DELETE FROM reviews WHERE ID = :id');
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+    }
 }

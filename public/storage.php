@@ -3,27 +3,27 @@
 
 namespace App;
 
-require_once __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
 use App\Db\SQliteConnection;
 use App\Db\SQliteInsert;
 use App\Db\SQliteQuery;
 
-class Storage {
+class Storage
+{
 
     // inserting data to db
-    public function insertData() {
+    public function insertData($username, $text_review)
+    {
         $pdo = (new SQliteConnection())->connect();
         $sqlite = new SQliteInsert($pdo);
-    
-        $username = readline('Enter usarname: ');
-        $text_review = readline('Enter review: ');
 
-        $sqlite->insertReview($username,$text_review);
+        $sqlite->insertReview($username, $text_review);
     }
-    
+
     // get list of reviews from db
-    public function getAllReviews($page, $limit) {
+    public function getAllReviews($page, $limit)
+    {
         $pdo = (new SQliteConnection())->connect();
         $query = new SQliteQuery($pdo);
 
@@ -33,7 +33,8 @@ class Storage {
     }
 
     // get one review from database
-    public function getReviewByID($id) {
+    public function getReviewByID($id)
+    {
         $pdo = (new SQliteConnection())->connect();
         $query = new SQliteQuery($pdo);
 
@@ -41,8 +42,11 @@ class Storage {
 
         return $review;
     }
-}
 
-// insert data
-/*$storage = new Storage();
-$storage->insertData();*/
+    // delete review from db on id
+    public function deleteReview($id) {
+        $pdo = (new SQliteConnection())->connect();
+        $query = new SQliteQuery($pdo);
+        $query->deleteReview($id);
+    }
+}
