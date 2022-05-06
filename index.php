@@ -63,4 +63,25 @@ $app->get('/api/feedbacks/{id}', function (Request $request, Response $response,
         ->withStatus(200);
 });
 
+// request for all reviews from database with pagination (task#2-3)
+$app->get('/api/feedbacks', function (Request $request, Response $response, array $args) {
+    // optional get query with num of page
+    $params = $request->getQueryParams();
+    
+    if ($params != null) {
+        $page = $params['page'];
+    } else {
+        $page = 1;
+    }
+
+    $storage = new Storage();
+    $review = $storage->getAllReviews($page, 5);
+
+    $response->getBody()->write(json_encode($review));
+
+    return $response
+        ->withHeader('content-type', 'application/json')
+        ->withStatus(200);
+});
+
 $app->run();

@@ -20,10 +20,13 @@ class SQliteQuery
         $this->pdo = $pdo;
     }
 
-    public function getReviews()
+    public function getReviews($page, $limit)
     {
-        $stmt = $this->pdo->query('SELECT ID, username, text_review ' . 'FROM reviews');
-        
+        $offset = $limit * ($page - 1);
+
+        $stmt = $this->pdo->prepare('SELECT ID, username, text_review ' . 'FROM reviews LIMIT :limit OFFSET :offset');
+        $stmt->execute([':limit' => $limit, ':offset' => $offset]);
+
         $reviews = [];
         
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {

@@ -23,11 +23,11 @@ class Storage {
     }
     
     // get list of reviews from db
-    public function getAllReviews() {
+    public function getAllReviews($page, $limit) {
         $pdo = (new SQliteConnection())->connect();
         $query = new SQliteQuery($pdo);
 
-        $reviews = $query->getReviews();
+        $reviews = $query->getReviews($page, $limit);
 
         return $reviews;
     }
@@ -42,3 +42,7 @@ class Storage {
         return $review;
     }
 }
+
+// insert data
+/*$storage = new Storage();
+$storage->insertData();*/
