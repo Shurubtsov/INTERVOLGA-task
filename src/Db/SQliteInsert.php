@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Db;
 
-class SQliteInsert {
+class SQliteInsert
+{
 
     /**
      * PDO object
@@ -13,13 +15,15 @@ class SQliteInsert {
      * Initialize the object with a specified PDO object
      * @param \PDO $pdo
      */
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
     }
 
-    public function insertReview($username, $text_review) {
+    public function insertReview($username, $text_review)
+    {
         $sql = 'INSERT INTO reviews(username, text_review) '
-                . 'VALUES(:username, :text_review);';
+            . 'VALUES(:username, :text_review);';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
@@ -29,5 +33,4 @@ class SQliteInsert {
 
         return $this->pdo->lastInsertId();
     }
-
 }

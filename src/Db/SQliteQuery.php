@@ -28,7 +28,7 @@ class SQliteQuery
         $stmt->execute([':limit' => $limit, ':offset' => $offset]);
 
         $reviews = [];
-        
+
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $reviews[] = [
                 'ID' => $row['ID'],
@@ -40,7 +40,8 @@ class SQliteQuery
         return $reviews;
     }
 
-    public function getReviewByID($id) {
+    public function getReviewByID($id)
+    {
         $stmt = $this->pdo->prepare('SELECT ID, username, text_review FROM reviews WHERE ID = :id');
         $stmt->execute([':id' => $id]);
 
@@ -56,7 +57,8 @@ class SQliteQuery
         return $review;
     }
 
-    public function deleteReview($id) {
+    public function deleteReview($id)
+    {
         $stmt = $this->pdo->prepare('DELETE FROM reviews WHERE ID = :id');
         $stmt->bindValue(':id', $id);
         $stmt->execute();
