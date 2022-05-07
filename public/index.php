@@ -8,6 +8,7 @@ use Slim\Factory\AppFactory;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once('public/storage.php'); // require for access to class of storage
+require_once('src/Db/Config.php'); // config
 
 $app = AppFactory::create();
 
@@ -17,7 +18,6 @@ use App\Controller\Hello;
 // requesting to controller which return hello world from slim
 $app->get('/hello', function (Request $request, Response $response) {
 
-    // notice controller of Hello class
     $helloController = new Hello();
     // response return display funcion of Hello with body "helloworld"
     $response->getBody()->write($helloController->display());
@@ -27,8 +27,10 @@ $app->get('/hello', function (Request $request, Response $response) {
 
 // connecting to db from controller and if file of db does not exist connection create him in config path
 use App\Controller\Db;
+use App\Db\Config;
 
 $app->get('/connect', function (Request $request, Response $response) {
+
     $dbController = new Db();
     $response->getBody()->write($dbController->connect());
     return $response;
@@ -90,6 +92,7 @@ $app->post('/api/feedbacks/add', function (Request $request, Response $response)
     $storage = new Storage();
 
     if ($params != null) {
+
         $username = $params['username'];
         $text = $params['text'];
 
@@ -101,17 +104,29 @@ $app->post('/api/feedbacks/add', function (Request $request, Response $response)
         ->withStatus(200);
 });
 
+
 // controller for deleting reviews from db on his id
 $app->delete('/api/feedbacks/delete/{id}', function (Request $request, Response $response, array $args) {
-    
-    $id = $args['id'];
-    $storage = new Storage();
 
-    $storage->deleteReview($id);
+    // basic auth via headers
+    if (($_SERVER['PHP_AUTH_USER'] == 'admin' && ($_SERVER['PHP_AUTH_PW'] == 'admin'))) {
+
+        $id = $args['id'];
+        $storage = new Storage();
+
+        $storage->deleteReview($id);
+        print('review deleted!');
+    } else {
+        header("WWW-Authenticate: Basic realm=\"Private request\"");
+        header("HTTP/1.0 401 Unauthorized");
+        print("this request only for admins");
+    }
+
 
     return $response
         ->withHeader('content-type', 'application/json')
         ->withStatus(200);
 });
+
 
 $app->run();

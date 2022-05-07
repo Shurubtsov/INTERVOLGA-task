@@ -44,7 +44,8 @@ class Storage
     }
 
     // delete review from db on id
-    public function deleteReview($id) {
+    public function deleteReview($id)
+    {
         $pdo = (new SQliteConnection())->connect();
         $query = new SQliteQuery($pdo);
         $query->deleteReview($id);
