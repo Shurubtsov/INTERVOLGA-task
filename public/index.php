@@ -12,15 +12,9 @@ require_once('src/Db/Config.php'); // config
 
 $app = AppFactory::create();
 
-use App\Controller\Hello;
-
-
 // requesting to controller which return hello world from slim
 $app->get('/hello', function (Request $request, Response $response) {
-
-    $helloController = new Hello();
-    // response return display funcion of Hello with body "helloworld"
-    $response->getBody()->write($helloController->display());
+    $response = $request->getBody()->write('Hello world!');
     return $response;
 });
 
@@ -29,21 +23,13 @@ $app->get('/hello', function (Request $request, Response $response) {
 use App\Controller\Db;
 use App\Db\Config;
 
-$app->get('/connect', function (Request $request, Response $response) {
-
-    $dbController = new Db();
-    $response->getBody()->write($dbController->connect());
-    return $response;
-});
-
 
 // create table from controller
 $app->get('/create', function (Request $request, Response $response) {
-    $dbController = new Db();
-    $response->getBody()->write($dbController->createTable());
+    $storage = new Storage();
+    $response->getBody()->write($storage->createTable());
     return $response;
 });
-
 
 // task #3 -> return one review from ID argument
 $app->get('/api/feedbacks/{id}', function (Request $request, Response $response, array $args) {

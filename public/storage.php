@@ -8,6 +8,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use App\Db\SQliteConnection;
 use App\Db\SQliteInsert;
 use App\Db\SQliteQuery;
+use App\Db\SQliteCreateTable;
+use Exception;
 
 class Storage
 {
@@ -49,5 +51,19 @@ class Storage
         $pdo = (new SQliteConnection())->connect();
         $query = new SQliteQuery($pdo);
         $query->deleteReview($id);
+    }
+
+    public function createTable()
+    {
+        $sqlite = new SQliteCreateTable((new SQliteConnection())->connect());
+        $message = '';
+        try {
+            $sqlite->createTable();
+            $message = 'Database table is created';
+        } catch (Exception $e) {
+            $message = 'ERROR: cant create table: ' . $e->getMessage();
+        }
+
+        return $message;
     }
 }
